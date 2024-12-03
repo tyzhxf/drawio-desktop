@@ -892,10 +892,10 @@ electron-updater@^6.3.4:
     semver "^7.6.3"
     tiny-typed-emitter "^2.1.0"
 
-electron@^32.0.1:
-  version "32.2.6"
-  resolved "https://registry.yarnpkg.com/electron/-/electron-32.2.6.tgz#564ff0cc163fb318070c989bc1066c5943ae882e"
-  integrity sha512-aGG1MLvWCf+ECUFBCmaCF52F8312OPAJfph2D0FSsFmlbfnJuNevZCbty2lFzsiIMtU7/QRo6d0ksbgR4s7y3w==
+electron@32.2.5:
+  version "32.2.5"
+  resolved "https://registry.yarnpkg.com/electron/-/electron-32.2.5.tgz#2c9efead9f03b28fee864da69a069cf4cec31194"
+  integrity sha512-8t5IGOvms/JTcLNnlOH7rFCAJIZJAazwYrF7kQsKQSLzDHh4z8mGFrU11NN3W4bIT6Yg5DJNniSWz3O5wJLmCw==
   dependencies:
     "@electron/get" "^2.0.0"
     "@types/node" "^20.9.0"
