@@ -244,14 +244,15 @@ function createWindow (opt = {})
 		mainWindow.webContents.send('resize')
 	});
 
-	let uniqueIsModifiedId;
+	let uniqueIsModifiedId, modifiedModalOpen = false;
 
 	ipcMain.on('isModified-result', async (e, data) =>
 	{
-		if (!validateSender(e.senderFrame) || uniqueIsModifiedId != data.uniqueId) return null;
+		if (!validateSender(e.senderFrame) || uniqueIsModifiedId != data.uniqueId || modifiedModalOpen) return null;
 
 		if (data.isModified)
 		{
+			modifiedModalOpen = true;
 			// Can't use async function here because it crashes on Linux when win.destroy is called
 			let response = dialog.showMessageBoxSync(
 				mainWindow,
@@ -285,6 +286,7 @@ function createWindow (opt = {})
 			else
 			{
 				cmdQPressed = false;
+				modifiedModalOpen = false;
 			}
 		}
 		else
@@ -433,6 +435,8 @@ app.whenReady().then(() =>
 				'includes a copy of the diagram (for PNG, SVG and PDF formats only)')
 			.option('--embed-svg-images',
 				'Embed Images in SVG file (for SVG format only)')
+			.option('--embed-svg-fonts <true/false>',
+				'Embed Fonts in SVG file (for SVG format only). Default is true', function(x){return x === 'true'}, true)
 			.option('-b, --border <border>',
 				'sets the border width around the diagram (default: 0)', parseInt)
 			.option('-s, --scale <scale>',
@@ -456,7 +460,7 @@ app.whenReady().then(() =>
 			.option('-z, --zoom <zoom>',
 				'scales the application interface', parseFloat)
 			.option('--svg-theme <theme>',
-				'Theme of the exported SVG image (dark, light [default])', themeRegExp, 'light')
+				'Theme of the exported SVG image (dark, light, auto [default])', themeRegExp, 'auto')
 			.option('--svg-links-target <target>',
 				'Target of links in the exported SVG image (auto [default], new-win, same-win)', linkTargetRegExp, 'auto')
 			.option('--enable-plugins',
@@ -555,7 +559,6 @@ app.whenReady().then(() =>
 				format: format,
 				w: options.width > 0 ? options.width : null,
 				h: options.height > 0 ? options.height : null,
-				pageMargin: options.border > 0 ? options.border : 0,
 				bg: options.transparent ? 'none' : '#ffffff',
 				from: from,
 				to: to,
@@ -563,12 +566,24 @@ app.whenReady().then(() =>
 				scale: (options.scale || 1),
 				embedXml: options.embedDiagram? '1' : '0',
 				embedImages: options.embedSvgImages? '1' : '0',
+				embedFonts: options.embedSvgFonts? '1' : '0',
 				jpegQuality: options.quality,
 				uncompressed: options.uncompressed,
 				theme: options.svgTheme,
 				linkTarget: options.svgLinksTarget,
 				crop: (options.crop && format == 'pdf') ? '1' : '0'
 			};
+
+			options.border = options.border > 0 ? options.border : 0;
+
+			if (format === 'pdf') 
+			{
+				expArgs.pageMargin = options.border;
+			}
+			else
+			{
+				expArgs.border = options.border;
+			}
 
 			if (options.layers)
 			{
