@@ -8,7 +8,6 @@
   ],
   "artifactName": "${productName}-${arch}-${version}.${ext}",
   "directories": {
-    "app": "./drawio/src/main/webapp",
     "output": "./dist/"
   },
   "npmRebuild": false,
@@ -35,7 +34,8 @@
       }
     ]
   },
-  "afterSign": "build/notarize.js",
+  "afterSign": "build/notarize.cjs",
+  "afterPack": "build/fuses.cjs",
   "dmg": {
   },
   "linux": {
@@ -44,9 +44,27 @@
     "maintainer": "JGraph <support@draw.io>",
     "icon": "./build",
     "target": [
-      "AppImage",
-      "deb",
-      "rpm"
+      { "target": "AppImage", "arch": [
+          "x64",
+          "arm64"
+        ]
+      },
+      { "target": "deb", "arch": [
+          "x64",
+          "arm64"
+        ]
+      },
+      { "target": "rpm", "arch": [
+          "x64",
+          "arm64"
+        ]
+      }
+    ]
+  },
+  "rpm": {
+    "fpm": [
+      "--rpm-rpmbuild-define=_build_id_links none",
+      "--rpm-digest=sha256"
     ]
   },
   "fileAssociations": [

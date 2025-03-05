@@ -1,9 +1,11 @@
 About
 ----- 
 
-**drawio-desktop** is a diagramming and whiteboarding desktop app based on [Electron](https://electronjs.org/) that wraps the [core draw.io editor](https://github.com/jgraph/drawio).
+**drawio-desktop** is a diagramming desktop app based on [Electron](https://electronjs.org/) that wraps the [core draw.io editor](https://github.com/jgraph/drawio).
 
 Download built binaries from the [releases section](https://github.com/jgraph/drawio-desktop/releases).
+
+**Can I use this app for free?** Yes, under the apache 2.0 license. If you don't change the code and accept it is provided "as-is", you can use it for any purpose.
 
 Security
 --------
@@ -11,6 +13,15 @@ Security
 draw.io Desktop is designed to be completely isolated from the Internet, apart from the update process. This checks github.com at startup for a newer version and downloads it from an AWS S3 bucket owned by Github. All JavaScript files are self-contained, the Content Security Policy forbids running remotely loaded JavaScript.
 
 No diagram data is ever sent externally, nor do we send any analytics about app usage externally. This means certain functionality for which we do not have a JavaScript implementation do not work in the Desktop build, namely .vsd and Gliffy import.
+
+Security and isolating the app are the primarily objectives of draw.io desktop. If you ask for anything that involves external connections enabled in the app by default, the answer will be no.
+
+Support
+-------
+
+Support is provided on a reasonable business constraints basis, but without anything contractually binding. All support is provided via this repo. There is no private ticketing support for non-paying users.
+
+Purchasing draw.io for Confluence or Jira does not entitle you to commercial support for draw.io desktop, unless you have a paid advanced (premium) edition of draw.io for Confluence Cloud.
 
 Developing
 ----------
@@ -21,9 +32,10 @@ Developing
 
 To run this:
 1. `npm install` (in the root directory of this repo)
-2. `npm install` (in the drawio directory of this repo `drawio/src/main/webapp`)
-3. export DRAWIO_ENV=dev if you want to develop/debug in dev mode.
-4. `npm start` _in the root directory of this repo_ runs the app. For debugging, use `npm start --enable-logging`.
+2. export DRAWIO_ENV=dev if you want to develop/debug in dev mode.
+3. `npm start` _in the root directory of this repo_ runs the app. For debugging, use `npm start --enable-logging`.
+
+Note: If a symlink is used to refer to drawio repo (instead of the submodule), then symlink the `node_modules` directory inside `drawio/src/main/webapp` also.
 
 To release:
 1. Update the draw.io sub-module and push the change. Add version tag before pushing to origin.
@@ -34,14 +46,17 @@ To release:
 6. Add release notes
 7. Publish release
 
-
 *Note*: In Windows release, when using both x64 and is32 as arch, the result is one big file with both archs. This is why we split them.
 
-Open-source, not open-contribution
-----------------------------------
+Local Storage and Session Storage is stored in the AppData folder:
 
-[Similar to SQLite](https://www.sqlite.org/copyright.html), diagrams.net is open
-source but closed to contributions.
+- macOS: `~/Library/Application Support/draw.io`
+- Windows: `C:\Users\<USER-NAME>\AppData\Roaming\draw.io\`
+
+Not open-contribution
+---------------------
+
+draw.io is closed to contributions (unless a maintainer permits it, which is extremely rare).
 
 The level of complexity of this project means that even simple changes 
 can break a _lot_ of other moving parts. The amount of testing required 
